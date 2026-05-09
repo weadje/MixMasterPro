@@ -145,17 +145,32 @@ def make_placeholder_video(
     fps: int = 30,
     size: tuple[int, int] = (1080, 1920),
     subtitle: str = "",
+    *,
+    relpath: str | None = None,
 ) -> Path:
     """Render a short MP4 with a slow zoom over the placeholder card.
 
-    Guarantees motion (>= 1.02x zoom over duration) so global_rules.no_static_frames
-    is honored even when no real footage is present.
+    If a scene-specific compositor exists for `relpath` (e.g. a known UI capture
+    or BnB shot), use that instead of the generic placeholder card so the result
+    looks like the intended scene.
     """
     out_path = Path(out_path)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
     tmp_png = out_path.with_suffix(".card.png")
-    make_placeholder_card(tmp_png, label, subtitle=subtitle, size=size)
+
+    renderer = None
+    if relpath:
+        try:
+            from .scene_visuals import find_renderer
+            renderer = find_renderer(relpath)
+        except Exception:
+            renderer = None
+
+    if renderer is not None:
+        renderer(tmp_png, size=size)
+    else:
+        make_placeholder_card(tmp_png, label, subtitle=subtitle, size=size)
 
     # Slow Ken Burns: 1.00 -> 1.06 over duration. Even very short shots pass min_zoom.
     frames = max(1, int(round(duration_sec * fps)))
@@ -263,10 +278,22 @@ def ensure_asset(
     ext = real.suffix.lower()
 
     if ext in (".mp4", ".mov"):
-        make_placeholder_video(real, label, duration_sec, fps=fps, size=size, subtitle=subtitle)
+        make_placeholder_video(real, label, duration_sec, fps=fps, size=size,
+                               subtitle=subtitle, relpath=norm)
     elif ext == ".wav":
-        # Slightly-audible tone for SFX so missing cues are obvious in QC; silence for VO/music.
-        if "/sfx/" in relpath.replace("\\", "/"):
+        # Try synthesized audio (real Kompa-feel bed, real SFX). Fall back to silence.
+        synth = None
+        try:
+            from .audio_synth import find_audio_renderer
+            synth = find_audio_renderer(norm)
+        except Exception:
+            synth = None
+        if synth is not None:
+            try:
+                synth(real)
+            except Exception:
+                make_silent_wav(real, max(0.5, duration_sec))
+        elif "/sfx/" in norm:
             make_tone_wav(real, max(0.5, duration_sec), freq=440.0, gain_db=-32.0)
         else:
             make_silent_wav(real, max(0.5, duration_sec))

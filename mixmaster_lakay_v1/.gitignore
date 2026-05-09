@@ -1,0 +1,19 @@
+# Built artifacts and intermediates
+work/
+__pycache__/
+*.pyc
+
+# Generated placeholders / per-line VO (regenerate by running the pipeline)
+assets/bnb/*.mp4
+assets/ui_captures/*.mp4
+assets/hero/*.mov
+assets/sfx/*.wav
+assets/music/*.wav
+assets/logos/*.svg
+assets/vo/*.wav
+assets/vo/lines/
+
+# Final renders are large; keep this comment but don't auto-ignore them.
+# Uncomment if you don't want to commit any built outputs:
+# renders/*.mp4
+# renders/*.png

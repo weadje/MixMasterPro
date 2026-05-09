@@ -1,0 +1,259 @@
+project: mixmaster_lakay_v1
+duration_sec: 60
+fps: 30
+master_resolution: { w: 1080, h: 1920 }
+output_codec: h264_yuv420p
+audio: { codec: aac, bitrate: 320k, sample_rate: 48000, channels: 2 }
+loudness: { integrated_lufs: -14, true_peak_dbtp: -1 }
+bpm: 92
+beat_sec: 0.652
+
+asset_manifest:
+  bnb:
+    - assets/bnb/rain_on_window.mp4
+    - assets/bnb/man_apartment_night.mp4
+    - assets/bnb/truck_driver_night.mp4
+    - assets/bnb/woman_cooking_haitian_food.mp4
+    - assets/bnb/man_gym_headphones.mp4
+    - assets/bnb/student_late_night.mp4
+    - assets/bnb/vinyl_needle_drop.mp4
+    - assets/bnb/radio_dial_closeup.mp4
+  ui_captures:
+    - assets/ui_captures/01_app_open.mp4
+    - assets/ui_captures/02_live_radio_button.mp4
+    - assets/ui_captures/03_radio_station_list.mp4
+    - assets/ui_captures/04_equalizer_reactive.mp4
+    - assets/ui_captures/05_kompa_presets.mp4
+    - assets/ui_captures/06_before_after_master.mp4
+  hero:
+    - assets/hero/phone_floating_neon.mov
+    - assets/hero/neon_particles.mov
+  vo:
+    - assets/vo/vo_haitian_male_master.wav
+    - assets/vo/vo_adam_english_master.wav
+  music:
+    - assets/music/bed_kompa_emotional_92bpm.wav
+  sfx:
+    - assets/sfx/radio_static.wav
+    - assets/sfx/radio_tune_sweep.wav
+    - assets/sfx/vinyl_crackle_loop.wav
+    - assets/sfx/rain_window_loop.wav
+    - assets/sfx/crowd_ambience_warm.wav
+    - assets/sfx/ui_tap_soft.wav
+    - assets/sfx/riser_emotional.wav
+    - assets/sfx/preset_impact_warm.wav
+    - assets/sfx/shimmer_gold.wav
+    - assets/sfx/confirm_chime.wav
+  logos:
+    - assets/logos/mixmaster_logo.svg
+    - assets/logos/appstore_badge.svg
+
+design_tokens:
+  colors:
+    bg_black:       "#03050A"
+    bg_panel:       "#0A0E18"
+    neon_cyan:      "#00E5FF"
+    neon_teal:      "#14E6C0"
+    neon_pink:      "#FF4FA3"
+    neon_violet:    "#A864FF"
+    deep_blue:      "#0B1F3A"
+    gold:           "#E8B84A"
+    warm_amber:     "#F2A15B"
+    text_primary:   "#FFFFFF"
+    text_secondary: "#B7C0CF"
+  safe_zones_9x16:
+    avoid_top_px: 220
+    avoid_bottom_px: 480
+
+scenes:
+
+  - id: 1_opening
+    range: [0.00, 8.00]
+    description: "Black screen, rain, distant radio voice, lonely Haitian man opens app"
+    layers:
+      - { t: [0.00, 1.50], type: solid, color: bg_black }
+      - { t: [0.40, 8.00], type: bg_loop, src: bnb/rain_on_window.mp4, opacity_ramp: [0.0, 0.7], color_grade: deep_blue_tint }
+      - { t: [2.00, 6.50], type: video, src: bnb/man_apartment_night.mp4, framing: medium_close, position: lower_third }
+      - { t: [6.50, 8.00], type: video, src: bnb/man_apartment_night.mp4, framing: phone_in_hand_closeup }
+    sfx:
+      - { t: 0.10, file: radio_static.wav,    gain_db: -12, fade_in_ms: 800 }
+      - { t: 0.50, file: rain_window_loop.wav, gain_db: -16, loop: true, until: 8.00 }
+      - { t: 1.20, file: radio_tune_sweep.wav, gain_db: -10 }
+    music_cue: { t: 1.50, layer: keyboard_pad_only, gain_db: -10, desc: "warm Kompa keyboard pad, no drums yet" }
+    distant_radio_voice:
+      t: 2.00
+      gain_db: -18
+      lowpass_hz: 1200
+      desc: "faint Haitian radio host voice in background, like overheard from another room"
+    text: []
+    vo:
+      t: 4.50
+      lang: ht
+      line: "Ou lwen lakay..."
+      delivery: "intimate, almost a whisper, breath audible"
+
+  - id: 2_app_reveal
+    range: [8.00, 16.00]
+    description: "App opens, LIVE RADIO button glows, zoom into UI"
+    shots:
+      - { t: [8.00, 9.50],  src: ui_captures/01_app_open.mp4,         zoom: [1.00, 1.04] }
+      - { t: [9.50, 12.00], src: ui_captures/02_live_radio_button.mp4, glow_pulse_on: "LIVE RADIO", color: neon_cyan }
+      - { t: [12.00, 14.50], src: ui_captures/03_radio_station_list.mp4, scroll_speed: 0.6, neon_outline: true }
+      - { t: [14.50, 16.00], type: kinetic_typography, copy: "TANDE LAKAY OU.", style: accent, size: 84, anim: word_stagger }
+    vo:
+      t: 9.00
+      lang: ht
+      line: "Men mizik la toujou konekte'w ak rasin ou."
+      delivery: "warm, conviction rising"
+    sfx:
+      - { t: 8.00, file: ui_tap_soft.wav, gain_db: -6 }
+      - { t: 9.50, file: shimmer_gold.wav, gain_db: -8 }
+
+  - id: 3_anywhere_promise
+    range: [16.00, 22.00]
+    description: "VO promise: listen to Haiti radio anywhere in the world"
+    shots:
+      - { t: [16.00, 19.00], src: ui_captures/03_radio_station_list.mp4, hud: { copy: "LIVE FROM AYITI", color: gold, position: top } }
+      - { t: [19.00, 22.00], src: ui_captures/04_equalizer_reactive.mp4, audio_driven: true, color: neon_teal }
+    vo:
+      t: 16.50
+      lang: ht
+      line: "Avèk MixMaster Pro... ou ka tande radyo Ayiti nenpòt kote nan mond lan."
+      delivery: "open, generous, the promise lands on 'nenpòt kote'"
+    music_cue: { t: 16.00, layer: add_soft_bass, desc: "low Kompa bass enters, still no drums" }
+
+  - id: 4_montage_lakay
+    range: [22.00, 34.00]
+    description: "Four people across the diaspora, all connected by the radio"
+    cut_pattern: emotional_dissolves
+    shots:
+      - { t: [22.00, 25.00], src: bnb/truck_driver_night.mp4,       overlay_phone_glow: true }
+      - { t: [25.00, 28.00], src: bnb/woman_cooking_haitian_food.mp4, overlay_phone_glow: true }
+      - { t: [28.00, 31.00], src: bnb/man_gym_headphones.mp4,        overlay_phone_glow: true }
+      - { t: [31.00, 34.00], src: bnb/student_late_night.mp4,        overlay_phone_glow: true }
+    text:
+      - { t: [22.50, 24.50], copy: "Yon chofè nan lannwit.",        style: accent, size: 44, position: lower_third }
+      - { t: [25.50, 27.50], copy: "Yon manman k ap kwit lakay li.", style: accent, size: 44, position: lower_third }
+      - { t: [28.50, 30.50], copy: "Yon atlèt nan jim li.",          style: accent, size: 44, position: lower_third }
+      - { t: [31.50, 33.50], copy: "Yon etidyan ki lwen.",           style: accent, size: 44, position: lower_third }
+    vo:
+      t: 23.00
+      lang: ht
+      line: "Son sa yo... fè'w sonje lakay. Fè'w sonje tan lontan. Fè'w sonje kiyès ou ye."
+      delivery: "tender, three-part build, last phrase ('kiyès ou ye') almost spoken"
+    sfx:
+      - { t: 22.00, file: vinyl_crackle_loop.wav, gain_db: -22, loop: true, until: 34.00 }
+      - { t: 25.00, file: crowd_ambience_warm.wav, gain_db: -28, fade_in_ms: 1200 }
+
+  - id: 5_energy_shift
+    range: [34.00, 38.00]
+    description: "Music transitions from emotional to full Kompa beat"
+    music_cue: { t: 34.00, layer: full_kompa_drums_in, desc: "konga + kit drops in cleanly on the 1, full groove from here" }
+    shots:
+      - { t: [34.00, 36.00], type: riser_visual, color: gold, particles: true }
+      - { t: [36.00, 38.00], type: kinetic_typography, copy: "Mizik la rete vivan.", style: accent, size: 72, anim: scale_pulse_on_beat }
+    sfx:
+      - { t: 34.00, file: riser_emotional.wav, gain_db: -2 }
+
+  - id: 6_kompa_presets
+    range: [38.00, 46.00]
+    description: "Show signature Kompa presets and before/after master"
+    shots:
+      - { t: [38.00, 40.50], src: ui_captures/05_kompa_presets.mp4, highlight_sequence: ["KOMPA WARM", "KOMPA STEREO", "CARIBBEAN SHINE", "KOMPA WARM PRO"] }
+      - { t: [40.50, 43.50], src: ui_captures/06_before_after_master.mp4, divider_sweep: [L, R], labels: ["AVAN", "APRE"] }
+      - { t: [43.50, 46.00], type: signature_highlight, target: "KOMPA WARM PRO", ring_color: gold, badge: "SIGNATURE" }
+    vo:
+      t: 38.50
+      lang: ht
+      line: "Epi lè'w vle kreye... MixMaster Pro ba'w presets Kompa pwofesyonèl pou fè mizik ou sonnen pwòp, laj, ak pare pou radyo."
+      delivery: "confident, professional, slight smile on 'pare pou radyo'"
+    sfx:
+      - { t: 38.50, file: preset_impact_warm.wav, gain_db: -4 }
+      - { t: 40.80, file: preset_impact_warm.wav, gain_db: -6 }
+      - { t: 43.80, file: preset_impact_warm.wav, gain_db: -2 }
+
+  - id: 7_text_emotional_pull
+    range: [46.00, 52.00]
+    description: "Three text overlays land in sequence over montage echoes"
+    shots:
+      - { t: [46.00, 48.00], type: bg_montage_echoes, sources: [22.00, 28.00, 31.00], opacity: 0.4 }
+      - { t: [48.00, 52.00], type: hero_phone_preview, src: hero/phone_floating_neon.mov, scale: 0.45 }
+    text:
+      - { t: [46.00, 48.00], copy: "Tande Lakay Ou.",         style: accent, size: 96, anim: blur_fade_in, color: gold }
+      - { t: [48.00, 50.00], copy: "Viv Nostalgia a.",         style: accent, size: 96, anim: blur_fade_in, color: warm_amber }
+      - { t: [50.00, 52.00], copy: "Mix & Master Anywhere.",   style: display, size: 84, anim: blur_fade_in, color: text_primary }
+
+  - id: 8_hero
+    range: [52.00, 57.00]
+    description: "Floating phone hero, neon particles, Kompa peak"
+    composite:
+      - { layer: 1, src: hero/phone_floating_neon.mov, scale: 0.65, position: center }
+      - { layer: 2, src: hero/neon_particles.mov,      blend: add }
+      - { layer: 3, type: radial_gradient_pulse, colors: [gold, neon_pink], hz: 1.5 }
+      - { layer: 4, type: reactive_meters, position: phone_perimeter, audio_driven: true }
+    camera: { push_in: [1.00, 1.06] }
+    vo:
+      t: 52.50
+      lang: ht
+      line: "MixMaster Pro. Radyo Ayiti. Nostalgia. Ak son pwofesyonèl... tout nan men'w."
+      delivery: "anthemic, four-beat structure, micro-pause before 'tout nan men'w'"
+    sfx:
+      - { t: 52.00, file: shimmer_gold.wav, gain_db: -3 }
+
+  - id: 9_end_card
+    range: [57.00, 60.00]
+    description: "Logo, three-pillar callout, App Store badge"
+    shots:
+      - t: [57.00, 60.00]
+        type: end_card
+        layout:
+          logo: logos/mixmaster_logo.svg
+          pillars: ["LIVE RADIO", "KOMPA PRESETS", "PRO MASTERING"]
+          pillars_color: gold
+          badge: logos/appstore_badge.svg
+          footer: "Available on the App Store"
+    sfx:
+      - { t: 57.20, file: confirm_chime.wav, gain_db: -6 }
+    final_frame_hold_sec: 0.6
+
+global_rules:
+  no_static_frames: true
+  min_zoom_per_shot: 1.02
+  max_seconds_without_visual_change: 2.5
+  cuts_snap_to_beat: true
+  vo_ducks_music_db: -6
+  warm_color_bias: true
+  vinyl_crackle_layer_global: { gain_db: -28, present_during: ["1_opening", "4_montage_lakay", "7_text_emotional_pull"] }
+
+hook_variants:
+  - { id: A, scene: 1_opening, style: rain_window_radio_static }
+  - { id: B, scene: 1_opening, style: tuning_dial_sweep_across_frequencies }
+  - { id: C, scene: 1_opening, style: vinyl_needle_drop_to_app_glow }
+
+vo_lines_ht:
+  - { scene: "1_opening",         t: 4.50,  copy: "Ou lwen lakay..." }
+  - { scene: "2_app_reveal",      t: 9.00,  copy: "Men mizik la toujou konekte'w ak rasin ou." }
+  - { scene: "3_anywhere_promise",t: 16.50, copy: "Avèk MixMaster Pro... ou ka tande radyo Ayiti nenpòt kote nan mond lan." }
+  - { scene: "4_montage_lakay",   t: 23.00, copy: "Son sa yo... fè'w sonje lakay. Fè'w sonje tan lontan. Fè'w sonje kiyès ou ye." }
+  - { scene: "6_kompa_presets",   t: 38.50, copy: "Epi lè'w vle kreye... MixMaster Pro ba'w presets Kompa pwofesyonèl pou fè mizik ou sonnen pwòp, laj, ak pare pou radyo." }
+  - { scene: "8_hero",            t: 52.50, copy: "MixMaster Pro. Radyo Ayiti. Nostalgia. Ak son pwofesyonèl... tout nan men'w." }
+
+vo_lines_en:
+  - { scene: "1_opening",         t: 4.50,  copy: "You're far from home..." }
+  - { scene: "2_app_reveal",      t: 9.00,  copy: "But the music still connects you to your roots." }
+  - { scene: "3_anywhere_promise",t: 16.50, copy: "With MixMaster Pro, you can listen to Haiti radio from anywhere in the world." }
+  - { scene: "4_montage_lakay",   t: 23.00, copy: "These sounds remind you of home. Of yesterday. Of who you are." }
+  - { scene: "6_kompa_presets",   t: 38.50, copy: "And when you're ready to create — MixMaster Pro gives you professional Kompa presets to make your music sound clean, wide, and radio-ready." }
+  - { scene: "8_hero",            t: 52.50, copy: "MixMaster Pro. Haiti Radio. Nostalgia. And professional sound — all in your hand." }
+
+deliverables:
+  - renders/mixmaster_lakay_9x16_master_ht.mp4
+  - renders/mixmaster_lakay_9x16_master_en.mp4
+  - renders/mixmaster_lakay_1x1_ht.mp4
+  - renders/mixmaster_lakay_16x9_ht.mp4
+  - renders/mixmaster_lakay_9x16_hookA_ht.mp4
+  - renders/mixmaster_lakay_9x16_hookB_ht.mp4
+  - renders/mixmaster_lakay_9x16_hookC_ht.mp4
+  - renders/mixmaster_lakay_captions_ht.srt
+  - renders/mixmaster_lakay_captions_en.srt
+  - renders/mixmaster_lakay_thumbnail.png
